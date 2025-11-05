@@ -44,6 +44,44 @@ int main(void){
     // om input så läser vi  1 eller 0 på motsvarande pinne på PIN
     //bool blinking = false;
     while(1){
+        /*
+
+        1. En struct med kund: betalning, namn
+        2. En struct med reklamtext (text mot rätt kund)
+        3. Reklamtid = 20sek (FRÅGA: sleep är olika på olika os..?)
+        4. Slumpa fram kund, beroende på betalning. rand().
+        5. Om vi har tid: Skrolla/rulla texten.
+
+Hederlige Harrys Bilar:
+Betalat 5000. Vill slumpmässigt visa en av tre meddelanden
+"Köp bil hos Harry"  (scroll)
+"En god bilaffär (för Harry!)" text
+"Hederlige Harrys Bilar" text (blinkande)
+ 
+Farmor Ankas Pajer AB:
+Betalat 3000. Vill slumpmässigt visa en av två
+"Köp paj hos Farmor Anka"  (scroll)
+"Skynda innan Mårten ätit alla pajer" text
+ 
+Svarte Petters Svartbyggen:
+Betalat 1500. Vill visa
+"Låt Petter bygga åt dig"  (scroll) - på jämna minuter
+"Bygga svart? Ring Petter" text - på ojämna minuter
+ 
+Långbens detektivbyrå:
+Betalat 4000. Vill visa
+"Mysterier? Ring Långben"  text 
+"Långben fixar biffen" text 
+ 
+Ibland måste vi visa reklam för oss själva:
+motsvarande för 1000 kr. 
+Meddelande "Synas här? IOT:s Reklambyrå"
+
+        */
+
+
+    
     }
+
     return 0;
 }

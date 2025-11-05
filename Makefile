@@ -1,14 +1,14 @@
-CC=C:\avr\bin\avr-g++
-LD=C:\avr\bin\avr-ld
-OBJCOPY="C:\avr\bin\avr-objcopy"
-OBJDUMP="C:\avr\bin\avr-objdump"
-AVRSIZE="C:\avr\bin\avr-size"
-OBJISP="C:\avr\bin\avrdude"
+CC=avr-g++
+LD=avr-ld
+OBJCOPY=avr-objcopy
+OBJDUMP=avr-objdump
+AVRSIZE=avr-size
+OBJISP=avrdude
 MCU=atmega328p
 CFLAGS=-Wall -Wextra  -Wundef -pedantic \
 		-Os  -DF_CPU=16000000UL -mmcu=${MCU} -DBAUD=19200
 LDFLAGS=-mmcu=$(MCU)
-PORT=\\\\.\\COM3
+# PORT=/dev/tty.usbserial-xxxx
 BIN=avrdemo
 OUT=${BIN}.hex
 SOURCES = main.cpp lcd.cpp uart.cpp
@@ -48,9 +48,9 @@ isp: ${BIN}.hex
 
 
 clean:
-	del "$(OUT)"  *.map *.P *.d
+	rm -f "$(OUT)"  *.map *.P *.d
 
 $(OUTPUTDIR): 
-	@mkdir "$(OUTPUTDIR)"
+	@mkdir -p "$(OUTPUTDIR)"
 		   	
 .PHONY: clean dirs

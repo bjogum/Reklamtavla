@@ -1,3 +1,4 @@
-/avrdemo.hex
-/avrdemo.map
-/bin
+bin/
+*.hex
+*.map
+.DS_Store

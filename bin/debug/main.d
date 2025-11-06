@@ -18,5 +18,6 @@ bin/debug/main.o: main.cpp \
  /opt/homebrew/Cellar/avr-gcc@9/9.4.0_1/lib/avr-gcc/9/gcc/avr/9.4.0/include/stdarg.h \
  /opt/homebrew/Cellar/avr-gcc@9/9.4.0_1/lib/avr-gcc/9/gcc/avr/9.4.0/include/stddef.h \
  /opt/homebrew/Cellar/avr-gcc@9/9.4.0_1/lib/avr-gcc/9/gcc/avr/9.4.0/include/stdbool.h \
- lcd.h /opt/homebrew/Cellar/avr-gcc@9/9.4.0_1/avr/include/avr/pgmspace.h \
- uart.h
+ /opt/homebrew/Cellar/avr-gcc@9/9.4.0_1/avr/include/string.h \
+ /opt/homebrew/Cellar/avr-gcc@9/9.4.0_1/avr/include/stdlib.h lcd.h \
+ /opt/homebrew/Cellar/avr-gcc@9/9.4.0_1/avr/include/avr/pgmspace.h uart.h

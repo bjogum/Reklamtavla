@@ -12,7 +12,6 @@
 
 #define LED_PIN 2
 #define BUTTON_PIN 1
-#define REKLAMTID 20000
 
 #define BIT_SET(a, b) ((a) |= (1ULL << (b)))
 #define BIT_CLEAR(a,b) ((a) &= ~(1ULL<<(b)))
@@ -101,17 +100,25 @@ int main(void){
         
         // get a random text (index)
         int textIndex = rand() % user[userToPresent].messagesCount;
-
-        // Clear the LCD
-        lcd.Clear();      
-
-        // write LCD text
-        lcd.WriteText((char *)user[userToPresent].message[textIndex].message);
         printf("Now presenting: %d | Text id: %d\n", userToPresent, textIndex);
-       
-        _delay_ms(REKLAMTID);
 
+        // SCROLL FUNCTION
+        int cnt = 0;
+        while (cnt < 2){
+            cnt++;
+            char *txt = user[userToPresent].message[textIndex].message;
+
+            for (int i = 0; i < strlen(txt); i++){
+                // Clear the LCD
+                lcd.Clear();      
+
+                // write LCD text
+                lcd.WriteText((char *)txt+i);
+                
+                _delay_ms(320);
+            
+            }
         }
-
+    }
     return 0;
 }

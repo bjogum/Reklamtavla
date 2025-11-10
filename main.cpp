@@ -108,14 +108,14 @@ int main(void){
             cnt++;
             char *txt = user[userToPresent].message[textIndex].message;
 
-            for (int i = 0; i < strlen(txt); i++){
+            for (int i = 0; i < 15; i++){
                 // Clear the LCD
                 lcd.Clear();      
 
                 // write LCD text
                 lcd.WriteText((char *)txt+i);
                 
-                _delay_ms(320);
+                _delay_ms(485);
             
             }
         }

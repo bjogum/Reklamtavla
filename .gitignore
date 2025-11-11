@@ -1,4 +1,4 @@
-bin/
+/bin
 *.hex
 *.map
 .DS_Store

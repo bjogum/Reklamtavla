@@ -3,3 +3,6 @@ bin/
 *.map
 .DS_Store
 Makefile
+/avrdemo.hex
+/avrdemo.map
+/bin

@@ -102,12 +102,16 @@ int main(void){
         int textIndex = rand() % user[userToPresent].messagesCount;
         printf("Now presenting: %d | Text id: %d\n", userToPresent, textIndex);
 
-        // SCROLL FUNCTION
+
+        // SCROLL FUNCTION + delay
         int cnt = 0;
+
+        // two 'complete scrolls'
         while (cnt < 2){
             cnt++;
             char *txt = user[userToPresent].message[textIndex].message;
 
+            // scroll 15 steps each.
             for (int i = 0; i < 15; i++){
                 // Clear the LCD
                 lcd.Clear();      

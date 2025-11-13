@@ -13,6 +13,7 @@
 
 #define LED_PIN 2
 #define BUTTON_PIN 1
+#define DISPLEN 16
 
 #define BIT_SET(a, b) ((a) |= (1ULL << (b)))
 #define BIT_CLEAR(a,b) ((a) &= ~(1ULL<<(b)))
@@ -46,18 +47,24 @@ int main(void){
         // two 'complete scrolls'
         while (cnt < 2){
             cnt++;
-            char *txt = user[userToPresent].message[textIndex].message;
+            char txt_R[45];
+            char *txt_L = user[userToPresent].message[textIndex].message;
 
-            // scroll 15 steps each.
-            for (int i = 0; i < 15; i++){
-                // Clear the LCD
-                lcd.Clear();      
+            // scroll to txt ends (roll out of screen)
+            for (int i = 0; i < (strlen(user[userToPresent].message[textIndex].message)+DISPLEN+1); i++){
 
-                // write LCD text
-                lcd.WriteText((char *)txt+i);
-                    
-                _delay_ms(485);
-            }        
+                if (i <= DISPLEN){
+                    snprintf(txt_R,i+1,txt_L);
+                    lcd.GoTo(DISPLEN-i,0);
+                    lcd.WriteText((char *)txt_R);    
+
+                } else {
+                    lcd.Clear();
+                    lcd.WriteText((char *)txt_L+i-DISPLEN);
+                }
+
+                _delay_ms(130);
+            }
         }
     }
     return 0;

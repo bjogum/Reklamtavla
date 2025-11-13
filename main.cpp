@@ -27,6 +27,8 @@ int main(void){
     HD44780 lcd;
     lcd.Initialize(); // Initialize the LCD
 
+    createSpecChar(&lcd);
+    
     // create all (5) customers.
     Customer user[5];
     createCustomers(user);

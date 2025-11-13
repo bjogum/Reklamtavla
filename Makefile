@@ -11,7 +11,7 @@ LDFLAGS=-mmcu=$(MCU)
 # PORT=/dev/tty.usbserial-xxxx
 BIN=avrdemo
 OUT=${BIN}.hex
-SOURCES = main.cpp lcd.cpp uart.cpp customer.cpp
+SOURCES = main.cpp lcd.cpp uart.cpp customer.cpp texteffects.cpp
 
 DEBUG?=1
 

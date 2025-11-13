@@ -8,12 +8,12 @@
 #include "lcd.h"
 #include "uart.h"
 #include "customer.h"
+#include "texteffects.h"
 
 // https://wokwi.com/projects/416241646559459329
 
 #define LED_PIN 2
 #define BUTTON_PIN 1
-#define DISPLEN 16
 
 #define BIT_SET(a, b) ((a) |= (1ULL << (b)))
 #define BIT_CLEAR(a,b) ((a) &= ~(1ULL<<(b)))
@@ -41,31 +41,7 @@ int main(void){
         int textIndex = rand() % user[userToPresent].messagesCount;
         printf("Now presenting: %d | Text id: %d\n", userToPresent, textIndex);
 
-        // SCROLL FUNCTION + delay
-        int cnt = 0;
-
-        // two 'complete scrolls'
-        while (cnt < 2){
-            cnt++;
-            char txt_R[45];
-            char *txt_L = user[userToPresent].message[textIndex].message;
-
-            // scroll to txt ends (roll out of screen)
-            for (int i = 0; i < (strlen(user[userToPresent].message[textIndex].message)+DISPLEN+1); i++){
-
-                if (i <= DISPLEN){
-                    snprintf(txt_R,i+1,txt_L);
-                    lcd.GoTo(DISPLEN-i,0);
-                    lcd.WriteText((char *)txt_R);    
-
-                } else {
-                    lcd.Clear();
-                    lcd.WriteText((char *)txt_L+i-DISPLEN);
-                }
-
-                _delay_ms(130);
-            }
-        }
+        scrollText(&lcd, user, userToPresent, textIndex);
     }
     return 0;
 }

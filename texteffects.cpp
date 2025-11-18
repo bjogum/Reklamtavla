@@ -1,6 +1,8 @@
 #include <stdio.h> //sprintf()
 #include <string.h> //strlen()
 #include <util/delay.h> //_delay_ms()
+#include <time.h> // time elapsed´
+#include <util/delay.h>
 #include "lcd.h"
 #include "customer.h"
 #include "texteffects.h"
@@ -188,18 +190,20 @@ void GetBitmap(char inputChar, uint8_t slicedChar[8])
     }        
 }
 
-void FadeInString(HD44780 *lcd, Customer *user, int userToPresent, int textIndex) // Note: Limited printspeed allows max ca 20 char(for 20 sec message) 
+void FadeInString(HD44780 *lcd, char *txt) 
 {
-    char *inputStr = user[userToPresent].message[textIndex].message;   
+    char *inputStr = txt;   
                        
     lcd->Clear();
     lcd->GoTo(0,0);
-    FixSpecChar(inputStr);
+    //FixSpecChar(inputStr);
 
     int breakPoint;
     breakPoint = CleanBreak(inputStr); // Use breakPoint as rowbreak
     
     uint8_t slicedChar[8] = { 0 }; 
+
+    //time_t start = time(NULL);
 
     for(int i = 0; i < strlen(inputStr); i++)   
         {   
@@ -208,9 +212,10 @@ void FadeInString(HD44780 *lcd, Customer *user, int userToPresent, int textIndex
 
             int Row;            // Position variable Y-axis
 
-            for(int j = 0; j < 8; j++)              
+            for(int j = 0; j < 4; j++)              
                 {    
                     tmpBit[j] = slicedChar[j];             // tmpBit recieves 1 pixelrow(per iteration) from slicedChar
+                    tmpBit[j+1] = slicedChar[j+1];             // tmpBit recieves 1 pixelrow(per iteration) from slicedChar
                     lcd->CreateChar(0, tmpBit);               // Stores current state of char to CGRAM(custom char lib), slot 0             
                     if     (i<=breakPoint)  {Row = 0; lcd->GoTo(i,Row); }     // Forces WriteData to remain on current  
                     else if(i>breakPoint) {Row = 1; lcd->GoTo(i-(breakPoint+1),Row);}      // pos until all pixelrows are printed
@@ -221,8 +226,19 @@ void FadeInString(HD44780 *lcd, Customer *user, int userToPresent, int textIndex
             else if(i>breakPoint) {Row = 1; lcd->GoTo(i-(breakPoint+1),Row); } 
             lcd->WriteData(inputStr[i]);  printf("%d",i);      // Prints char from CGROM(standard char memory)       
         }
-    lcd->Clear(); 
-                                                         
+        
+    // time_t end = time(NULL);     
+    
+    // double secCnt = difftime(end, start);  // Total duration of print
+
+    // double maxDur = 20.0;       // 20 sec
+
+    // unsigned long remainingMs = (unsigned long)((maxDur - secCnt) * 1000);
+
+    // for(unsigned int t = 0; t < (remainingMs) * 1000; t++) 
+    // {_delay_ms(1);}
+
+    // lcd->Clear();                                                          
 } 
 
 int CleanBreak(char *inputStr) // Prevents row break mid-word 
@@ -230,9 +246,9 @@ int CleanBreak(char *inputStr) // Prevents row break mid-word
     int breakPoint;
         for (int k = 15; k > 0; k--)
             {
-                if(inputStr[k] == ' '){breakPoint = k; break;} // looks from end of row 1 and returns     
+                if(inputStr[k] == ' '){breakPoint = k; break;}     
             }      
-    return breakPoint;
+    return breakPoint; // Counts down from end of row 1 until 'space' is found and returns value 
 }
 
 void DiscoMan(HD44780 *lcd)

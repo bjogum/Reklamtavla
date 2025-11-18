@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <string.h> //strlen()
 #include <stdlib.h> //rand()
+#include <time.h> //time
 #include "lcd.h"
 #include "uart.h"
 #include "customer.h"
@@ -27,16 +28,18 @@ int main(void){
     init_serial();
     HD44780 lcd;
     lcd.Initialize(); // Initialize the LCD
-
+    srand(time(NULL)); // Seed rand with sys clock to avoid same rand seq 
     createSpecChar(&lcd);
     
     // create all (5) customers.
     Customer user[5];
     createCustomers(user);
+
     // get the sum of all payment (used for rand)
     int sum = totalPaid(user);
 
     int userToPresent = -1;
+    DiscoMan(&lcd);
     while(1){
         userToPresent = randomCustomer(user, sum, userToPresent);
         
@@ -44,18 +47,16 @@ int main(void){
         int textIndex = rand() % user[userToPresent].messagesCount;
         
         printf("Now presenting: %d | Text id: %d\n", userToPresent, textIndex);
-        
-        //scrollText(&lcd, user, userToPresent, textIndex);
 
-        //DiscoMan(&lcd);
-
-        FadeInString(&lcd, user, userToPresent, textIndex);
         char *txt = user[userToPresent].message[textIndex].message;
+        
         FixSpecChar(txt);
         lcd.Clear();
-
         if (textIndex == 0 && (userToPresent == 0 || userToPresent == 1 || userToPresent == 2)){
             scrollText(&lcd, txt);
+        }
+        else if (userToPresent == 3 ){
+            FadeInString(&lcd, txt);
         }
         else{
             lcd.GoTo(0,0);

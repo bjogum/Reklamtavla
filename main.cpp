@@ -20,6 +20,7 @@
 #define BIT_FLIP(a,b) ((a) ^= (1ULL<<(b)))
 #define BIT_CHECK(a,b) (!!((a) & (1ULL<<(b)))) 
 #define BUTTON_IS_CLICKED(PINB,BUTTON_PIN) !BIT_CHECK(PINB,BUTTON_PIN)
+#define DISPLEN 16
 
 int main(void){
 
@@ -41,9 +42,23 @@ int main(void){
         
         // get a random text (index)
         int textIndex = rand() % user[userToPresent].messagesCount;
+        
         printf("Now presenting: %d | Text id: %d\n", userToPresent, textIndex);
+        char *txt = user[userToPresent].message[textIndex].message;
+        FixSpecChar(txt);
+        lcd.Clear();
 
-        scrollText(&lcd, user, userToPresent, textIndex);
+        if (textIndex == 0 && (userToPresent == 0 || userToPresent == 1 || userToPresent == 2)){
+            scrollText(&lcd, user, userToPresent, textIndex);
+        }
+        else{
+            lcd.GoTo(0,0);
+            lcd.WriteText(txt);
+
+            for (int i = 0; i < 100; i++){
+                _delay_ms(50);
+            }
+        }
     }
     return 0;
 }

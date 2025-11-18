@@ -74,7 +74,7 @@ void FixSpecChar(char *InStr){ // Applies mapping for Å,Ä,Ö,å,ä,ö
 }
 
 void GetBitmap(char inputChar, uint8_t slicedChar[8]) 
-{   // Fetch corresponding bitmap for char A-Ö(or a-ö), and store it as 8-element-array in uint8_t
+{   // Fetch corresponding bitmap for char A-Ö(or a-ö), and store it as 8-element-array, type alias uint8_t
     
     //A                                                                                         //O                                                                                                                             
     uint8_t AUp[8] = {0b01110, 0b10001, 0b10001, 0b11111, 0b10001, 0b10001, 0b10001, 0b00000}; uint8_t OUp[8] = {0b01110, 0b10001, 0b10001, 0b10001, 0b10001, 0b10001, 0b01110, 0b00000};

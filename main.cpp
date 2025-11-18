@@ -42,8 +42,12 @@ int main(void){
         // get a random text (index)
         int textIndex = rand() % user[userToPresent].messagesCount;
         printf("Now presenting: %d | Text id: %d\n", userToPresent, textIndex);
+        
+        //scrollText(&lcd, user, userToPresent, textIndex);
 
-        scrollText(&lcd, user, userToPresent, textIndex);
+        //DiscoMan(&lcd);
+
+        FadeInString(&lcd, user, userToPresent, textIndex);
     }
     return 0;
 }

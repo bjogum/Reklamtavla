@@ -69,7 +69,6 @@ void FixSpecChar(char *InStr){ // Applies mapping for Å,Ä,Ö,å,ä,ö
         else
         {OutStr[j] = InStr[i];j++;} 
     }
-<<<<<<< HEAD
 
     memset(InStr,0,strlen(InStr) + 1);
     strcpy(InStr,OutStr);
@@ -198,8 +197,8 @@ void FadeInString(HD44780 *lcd, Customer *user, int userToPresent, int textIndex
     lcd->GoTo(0,0);
     FixSpecChar(inputStr);
 
-    int breakPos;
-    breakPos = CleanBreak(inputStr); // Use breakPos as rowbreak
+    int breakPoint;
+    breakPoint = CleanBreak(inputStr); // Use breakPoint as rowbreak
     
     uint8_t slicedChar[8] = { 0 }; 
 
@@ -214,18 +213,28 @@ void FadeInString(HD44780 *lcd, Customer *user, int userToPresent, int textIndex
                 {    
                     tmpBit[j] = slicedChar[j];             // tmpBit recieves 1 pixelrow(per iteration) from slicedChar
                     lcd->CreateChar(0, tmpBit);               // Stores current state of char to CGRAM(custom char lib), slot 0             
-                    if     (i<=breakPos)  {Row = 0; lcd->GoTo(i,Row); }     // Forces WriteData to remain on current  
-                    else if(i>breakPos) {Row = 1; lcd->GoTo(i-(breakPos+1),Row);}      // pos until all pixelrows are printed
+                    if     (i<=breakPoint)  {Row = 0; lcd->GoTo(i,Row); }     // Forces WriteData to remain on current  
+                    else if(i>breakPoint) {Row = 1; lcd->GoTo(i-(breakPoint+1),Row);}      // pos until all pixelrows are printed
                     lcd->WriteData(0);                           // Prints tmpBit
                 }    
 
-            if     (i<=breakPos)  {Row = 0; lcd->GoTo(i,Row); } 
-            else if(i>breakPos) {Row = 1; lcd->GoTo(i-(breakPos+1),Row); } 
+            if     (i<=breakPoint)  {Row = 0; lcd->GoTo(i,Row); } 
+            else if(i>breakPoint) {Row = 1; lcd->GoTo(i-(breakPoint+1),Row); } 
             lcd->WriteData(inputStr[i]);  printf("%d",i);      // Prints char from CGROM(standard char memory)       
         }
     lcd->Clear(); 
                                                          
 } 
+
+int CleanBreak(char *inputStr) // Prevents row break mid-word 
+{
+    int breakPoint;
+        for (int k = 15; k > 0; k--)
+            {
+                if(inputStr[k] == ' '){breakPoint = k; break;} // looks from end of row 1 and returns     
+            }      
+    return breakPoint;
+}
 
 void DiscoMan(HD44780 *lcd)
 {                                                                                         // Bitmaps:
@@ -233,7 +242,7 @@ void DiscoMan(HD44780 *lcd)
     uint8_t dManL[8] =  { 0b01100,0b01100,0b10010,0b10110,0b01100,0b01100,0b01010,0b11011 };    // Discoman left position     
     uint8_t dManOpen[8] =  { 0b00011,0b00011,0b01001,0b01011,0b00110,0b00110,0b00101,0b01101 }; // Discoman opening   
     uint8_t dManFin[8] =  { 0b00000,0b00000,0b00000,0b00000,0b00000,0b00000,0b00000,0b00000 };  // Discoman finale 
-    uint8_t slicedCharz[8] = { 0b00000,0b00000,0b00000,0b00000,0b00000,0b00000,0b00000,0b00000 }; // Blank bitmap for storing current j feed of pixelrows
+    uint8_t slicedChar[8] = { 0b00000,0b00000,0b00000,0b00000,0b00000,0b00000,0b00000,0b00000 }; // Blank bitmap for storing current j feed of pixelrows
                                                                    
                                                     
     char strSpace[] = "                                "; // Array of 32 spaces for iterating and printing spaces 
@@ -247,14 +256,14 @@ void DiscoMan(HD44780 *lcd)
             for(int j = 0; j < 8; j++)
                 {  
                             printf("j: %d ",j); // Errorhandler 
-                                                            // slicedCharz gets 1 pixel row from desired bitmap per iteration         
-                    if                (i<=28 && i%2==0) { memcpy(&slicedCharz[j], &dManR[j], sizeof(uint8_t)); }     
-                    else if(i <  15          && i%2==1) { memcpy(&slicedCharz[j], &dManOpen[j], sizeof(uint8_t)); }  
-                    else if(i >= 15 && i<=28 && i%2==1) { memcpy(&slicedCharz[j], &dManL[j], sizeof(uint8_t)); }    
-                    else if(i> 28)                      { memcpy(&slicedCharz[j], &dManFin[j], sizeof(uint8_t)); }      
+                                                            // slicedChar gets 1 pixel row from desired bitmap per iteration         
+                    if                (i<=28 && i%2==0) { memcpy(&slicedChar[j], &dManR[j], sizeof(uint8_t)); }     
+                    else if(i <  15          && i%2==1) { memcpy(&slicedChar[j], &dManOpen[j], sizeof(uint8_t)); }  
+                    else if(i >= 15 && i<=28 && i%2==1) { memcpy(&slicedChar[j], &dManL[j], sizeof(uint8_t)); }    
+                    else if(i> 28)                      { memcpy(&slicedChar[j], &dManFin[j], sizeof(uint8_t)); }      
                     
                     
-                    lcd->CreateChar(0, slicedCharz);   // Assign current iteration content to CGRAM(custom char mem) slot 0 
+                    lcd->CreateChar(0, slicedChar);   // Assign current iteration content to CGRAM(custom char mem) slot 0 
                     
                     if     (i%2==0) { Rowz = 0; lcd->GoTo(i+1,Rowz); }  // Move position 
                     else if(i%2==1) { Rowz = 1; lcd->GoTo(i+1,Rowz); } 
@@ -269,18 +278,3 @@ void DiscoMan(HD44780 *lcd)
     lcd->Clear();         
 }
 
-int CleanBreak(char *inputStr) // Prevents row break mid-word
-{
-    int breakPos = 17;
-        for (int k = 15; k > 0; k--)
-            {
-                if(inputStr[k] == ' '){breakPos = k; break;}     
-            }      
-    return breakPos;
-=======
-    // Loop itererar över angiven sträng och jämför hex-tal sekvenser för att ersätta element med dem custom chars vi skapat.
-    // Man kan alltså kalla funktionen som FixSpecChar(Min-Sträng-Var)
-    memset(InStr, 0, lengthOfText + 1);
-    strcpy(InStr, OutStr);
->>>>>>> fd64e2578c8b76da4addb51f329248c902abca7d
-}

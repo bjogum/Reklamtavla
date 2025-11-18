@@ -44,14 +44,12 @@ int main(void){
         int textIndex = rand() % user[userToPresent].messagesCount;
         
         printf("Now presenting: %d | Text id: %d\n", userToPresent, textIndex);
-<<<<<<< HEAD
         
         //scrollText(&lcd, user, userToPresent, textIndex);
 
         //DiscoMan(&lcd);
 
         FadeInString(&lcd, user, userToPresent, textIndex);
-=======
         char *txt = user[userToPresent].message[textIndex].message;
         FixSpecChar(txt);
         lcd.Clear();
@@ -67,7 +65,6 @@ int main(void){
                 _delay_ms(50);
             }
         }
->>>>>>> fd64e2578c8b76da4addb51f329248c902abca7d
     }
     return 0;
 }

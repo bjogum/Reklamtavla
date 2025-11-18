@@ -55,7 +55,7 @@ int main(void){
         lcd.Clear();
 
         if (textIndex == 0 && (userToPresent == 0 || userToPresent == 1 || userToPresent == 2)){
-            scrollText(&lcd, user, userToPresent, textIndex);
+            scrollText(&lcd, txt);
         }
         else{
             lcd.GoTo(0,0);

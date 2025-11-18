@@ -7,7 +7,7 @@
 
 #define DISPLEN 16
 
-void scrollText(HD44780 *lcd, Customer *user, int userToPresent, int textIndex){
+void scrollText(HD44780 *lcd, char *txt){
 
     // SCROLL FUNCTION + delay
     int cnt = 0;
@@ -16,21 +16,20 @@ void scrollText(HD44780 *lcd, Customer *user, int userToPresent, int textIndex){
     while (cnt < 2){
         cnt++;
 
-        char txt_R[45];
-        char *txt_L = user[userToPresent].message[textIndex].message;
-        FixSpecChar(txt_L);
+        char txt_part[45];
         
         // scroll to txt ends (roll out of screen)
-        int lengthOfText = strlen(txt_L); //skapade en variabel, så att for-loopen inte behöver räkna längden på texten varje gång den körs
+        int lengthOfText = strlen(txt); //skapade en variabel, så att for-loopen inte behöver räkna längden på texten varje gång den körs
         for (int i = 0; i < (lengthOfText + DISPLEN + 1); i++){
             if (i <= DISPLEN){
-                snprintf(txt_R, i + 1, txt_L);
+                snprintf(txt_part, i + 1, txt);
                 lcd->GoTo(DISPLEN - i, 0);
-                lcd->WriteText((char *)txt_R);    
+                lcd->WriteText((char *)txt_part);    
             } 
             else {
+                snprintf(txt_part, DISPLEN + 1, txt + i - DISPLEN);
                 lcd->Clear();
-                lcd->WriteText((char *) txt_L + i - DISPLEN);
+                lcd->WriteText((char *) txt_part);
             }
             _delay_ms(130);
         }

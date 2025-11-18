@@ -21,16 +21,16 @@ void scrollText(HD44780 *lcd, Customer *user, int userToPresent, int textIndex){
         FixSpecChar(txt_L);
         
         // scroll to txt ends (roll out of screen)
-        for (int i = 0; i < (strlen(user[userToPresent].message[textIndex].message)+DISPLEN+1); i++){
-
+        int lengthOfText = strlen(txt_L); //skapade en variabel, så att for-loopen inte behöver räkna längden på texten varje gång den körs
+        for (int i = 0; i < (lengthOfText + DISPLEN + 1); i++){
             if (i <= DISPLEN){
-                snprintf(txt_R,i+1,txt_L);
-                lcd->GoTo(DISPLEN-i,0);
+                snprintf(txt_R, i + 1, txt_L);
+                lcd->GoTo(DISPLEN - i, 0);
                 lcd->WriteText((char *)txt_R);    
             } 
             else {
                 lcd->Clear();
-                lcd->WriteText((char *)txt_L+i-DISPLEN);
+                lcd->WriteText((char *) txt_L + i - DISPLEN);
             }
             _delay_ms(130);
         }
@@ -56,9 +56,10 @@ void FixSpecChar(char *InStr){ // Applies mapping for Å,Ä,Ö,å,ä,ö
     
     int j = 0;
     char OutStr[strlen(InStr) + 1];
-    memset(OutStr,0,sizeof(OutStr));
+    memset(OutStr, 0, sizeof(OutStr));
     
-    for (int i = 0; i < strlen(InStr); i++){   
+    int lengthOfText = strlen(InStr); //samma gäller som tidigare
+    for (int i = 0; i < lengthOfText; i++){   
         if      ((uint8_t)InStr[i] == 0xC3 && (uint8_t)InStr[i+1] == 0x85) {OutStr[j] = 1;j++; i++;} // Å
         else if ((uint8_t)InStr[i] == 0xC3 && (uint8_t)InStr[i+1] == 0x84) {OutStr[j] = 2;j++; i++;} // Ä
         else if ((uint8_t)InStr[i] == 0xC3 && (uint8_t)InStr[i+1] == 0x96) {OutStr[j] = 3;j++; i++;} // Ö
@@ -68,6 +69,7 @@ void FixSpecChar(char *InStr){ // Applies mapping for Å,Ä,Ö,å,ä,ö
         else
         {OutStr[j] = InStr[i];j++;} 
     }
+<<<<<<< HEAD
 
     memset(InStr,0,strlen(InStr) + 1);
     strcpy(InStr,OutStr);
@@ -275,4 +277,10 @@ int CleanBreak(char *inputStr) // Prevents row break mid-word
                 if(inputStr[k] == ' '){breakPos = k; break;}     
             }      
     return breakPos;
+=======
+    // Loop itererar över angiven sträng och jämför hex-tal sekvenser för att ersätta element med dem custom chars vi skapat.
+    // Man kan alltså kalla funktionen som FixSpecChar(Min-Sträng-Var)
+    memset(InStr, 0, lengthOfText + 1);
+    strcpy(InStr, OutStr);
+>>>>>>> fd64e2578c8b76da4addb51f329248c902abca7d
 }

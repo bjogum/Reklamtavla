@@ -299,6 +299,7 @@ void discoMan(HD44780 *lcd)
     lcd->Clear();         
 }
 
+//Animation to "transition" into new text (it sucks and does not work)
 void sweepAnimation(HD44780 &lcd) {
 
     const char sweepChar = '#';
@@ -315,7 +316,7 @@ void sweepAnimation(HD44780 &lcd) {
         _delay_ms(20);
     }
     //sweep backward (clear)
-    for(int i = 16; i >= 0; i--) {
+    for(int i = 15; i >= 0; i--) {
         lcd.GoTo(i, 0);
         lcd.WriteData(blankChar);
 
@@ -324,4 +325,54 @@ void sweepAnimation(HD44780 &lcd) {
 
         _delay_ms(20);
     }
-} 
+}
+void randomDelay() {
+    int r = rand() % 3; //Pick random delay to simulate real typing
+    switch(r) {
+        case 0:
+            return _delay_ms(70);
+        case 1:
+            return _delay_ms(100);
+        case 2:
+            return _delay_ms(130);
+        default:
+            return _delay_ms(100);
+    }
+}
+
+//text-animation to simulate typing (version 3)
+void typeAnimation(HD44780 &lcd, char* txt) {
+    
+    for (int repeat = 0; repeat < 2; repeat++){
+
+        lcd.Clear();
+        lcd.GoTo(0, 0);
+        
+
+        const char* c = txt;
+        int col = 0;
+        int row = 0;
+
+        while (*c) {
+
+            lcd.WriteData(*c);
+            randomDelay();
+
+            if (*c == ',' || *c == '.' || *c == '!' || *c == '?') {
+                _delay_ms(500); // Longer delay at punctuations
+            }
+
+            col++;
+            c++;
+
+            if (col >= 16) {
+                col = 0;
+                row++;
+
+                if (row >= 2) break;
+                lcd.GoTo(0, row);
+            }
+        }
+        _delay_ms(2000);
+    }
+}

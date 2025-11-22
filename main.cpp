@@ -40,7 +40,8 @@ int main(void){
 
     int userToPresent = -1;
     
-    // DiscoMan(&lcd);
+    discoMan(&lcd);
+
     while(1){
         userToPresent = randomCustomer(user, sum, userToPresent);
         
@@ -51,7 +52,7 @@ int main(void){
 
         char *txt = user[userToPresent].message[textIndex].message;
       
-        FixSpecChar(txt);
+        fixSpecChar(txt);
 
         lcd.Clear();
 
@@ -62,7 +63,7 @@ int main(void){
                 blinkText(&lcd, txt);
             }
             else if (userToPresent == 3){
-                FadeInString(&lcd, txt);
+                fadeInString(&lcd, txt);
             }
             else{
                 lcd.GoTo(0,0);

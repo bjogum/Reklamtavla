@@ -58,6 +58,9 @@ int main(void){
             if (textIndex == 0 && (userToPresent == 0 || userToPresent == 1 || userToPresent == 2)){
                 scrollText(&lcd, txt);
             }
+            else if(userToPresent == 0 && textIndex == 2){
+                blinkText(&lcd, txt);
+            }
             else if (userToPresent == 3){
                 FadeInString(&lcd, txt);
             }

@@ -64,6 +64,9 @@ int main(void){
             else if (userToPresent == 3){
                 FadeInString(&lcd, txt);
             }
+            else if (userToPresent == 2 && textIndex == 1){
+                typeAnimation(lcd, txt);
+            }
             else{
                 lcd.GoTo(0,0);
                 lcd.WriteText(txt);

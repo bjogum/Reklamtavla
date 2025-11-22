@@ -39,7 +39,8 @@ int main(void){
     int sum = totalPaid(user);
 
     int userToPresent = -1;
-    DiscoMan(&lcd);
+    
+    // DiscoMan(&lcd);
     while(1){
         userToPresent = randomCustomer(user, sum, userToPresent);
         
@@ -49,23 +50,25 @@ int main(void){
         printf("Now presenting: %d | Text id: %d\n", userToPresent, textIndex);
 
         char *txt = user[userToPresent].message[textIndex].message;
-        
+      
         FixSpecChar(txt);
-        lcd.Clear();
-        if (textIndex == 0 && (userToPresent == 0 || userToPresent == 1 || userToPresent == 2)){
-            scrollText(&lcd, txt);
-        }
-        else if (userToPresent == 3 ){
-            FadeInString(&lcd, txt);
-        }
-        else{
-            lcd.GoTo(0,0);
-            lcd.WriteText(txt);
 
-            for (int i = 0; i < 100; i++){
+        lcd.Clear();
+
+            if (textIndex == 0 && (userToPresent == 0 || userToPresent == 1 || userToPresent == 2)){
+                scrollText(&lcd, txt);
+            }
+            else if (userToPresent == 3){
+                FadeInString(&lcd, txt);
+            }
+            else{
+                lcd.GoTo(0,0);
+                lcd.WriteText(txt);
+
+                for (int i = 0; i < 100; i++){
                 _delay_ms(50);
             }
-        }
+        } 
     }
     return 0;
 }

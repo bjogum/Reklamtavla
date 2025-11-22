@@ -1,7 +1,7 @@
 #include <stdio.h> //sprintf()
 #include <string.h> //strlen()
 #include <util/delay.h> //_delay_ms()
-#include <time.h> // time elapsed´
+#include <time.h> // time elapsed
 #include <util/delay.h>
 #include "lcd.h"
 #include "customer.h"
@@ -43,7 +43,7 @@ void createSpecChar(HD44780 *lcd){
     uint8_t AW[8] = { 0b00100,0b00000,0b01110,0b10001,0b11111,0b10001,0b00000,0b10001 }; // Å
     uint8_t AE[8] = { 0b01010,0b00000,0b01110,0b10001,0b11111,0b10001,0b00000,0b10001 }; // Ä
     uint8_t OO[8] = { 0b01010,0b00000,0b01110,0b10001,0b10001,0b10001,0b01110,0b00000 }; // Ö
-    uint8_t aw[8] = { 0b00100,0b01010,0b00100,0b01110,0b00001,0b01111,0b10001,0b01111 }; // å
+    uint8_t aw[8] = { 0b00100,0b00000,0b01110,0b00001,0b01111,0b10001,0b01111,0b00000 }; // å
     uint8_t ae[8] = { 0b01010,0b00000,0b01110,0b00001,0b01111,0b10001,0b01111,0b00000 }; // ä
     uint8_t oo[8] = { 0b01010,0b00000,0b01110,0b10001,0b10001,0b10001,0b01110,0b00000 }; // ö
     
@@ -116,7 +116,7 @@ void GetBitmap(char inputChar, uint8_t slicedChar[8])
     uint8_t LLo[8] = {0b01100, 0b00100, 0b00100, 0b00100, 0b00100, 0b00100, 0b01110, 0b00000}; uint8_t ZLo[8] = {0b00000, 0b00000, 0b11111, 0b00010, 0b00100, 0b01000, 0b11111, 0b00000};                                                                                                 
     // M                                                                                         //Å
     uint8_t MUp[8] = {0b10001, 0b11011, 0b10101, 0b10101, 0b10001, 0b10001, 0b10001, 0b00000}; uint8_t AW[8] = {0b00100, 0b00000, 0b01110, 0b10001, 0b11111, 0b10001, 0b00000, 0b10001};
-    uint8_t MLo[8] = {0b00000, 0b00000, 0b11010, 0b10101, 0b10101, 0b10101, 0b10101, 0b00000}; uint8_t aw[8] = {0b00100, 0b01010, 0b00100, 0b01110, 0b00001, 0b01111, 0b10001, 0b01111};
+    uint8_t MLo[8] = {0b00000, 0b00000, 0b11010, 0b10101, 0b10101, 0b10101, 0b10101, 0b00000}; uint8_t aw[8] = {0b00100, 0b00000, 0b01110, 0b00001, 0b01111, 0b10001, 0b01111, 0b00000};
     // N                                                                                         //Ä  
     uint8_t NUp[8] = {0b10001, 0b10001, 0b11001, 0b10101, 0b10011, 0b10001, 0b10001, 0b00000}; uint8_t AE[8] = {0b01010, 0b00000, 0b01110, 0b10001, 0b11111, 0b10001, 0b00000, 0b10001};
     uint8_t NLo[8] = {0b00000, 0b00000, 0b10110, 0b11001, 0b10001, 0b10001, 0b10001, 0b00000}; uint8_t ae[8] = {0b01010, 0b00000, 0b01110, 0b00001, 0b01111, 0b10001, 0b01111, 0b00000};
@@ -196,14 +196,11 @@ void FadeInString(HD44780 *lcd, char *txt)
                        
     lcd->Clear();
     lcd->GoTo(0,0);
-    //FixSpecChar(inputStr);
 
-    int breakPoint;
+    int breakPoint = 0;
     breakPoint = CleanBreak(inputStr); // Use breakPoint as rowbreak
     
     uint8_t slicedChar[8] = { 0 }; 
-
-    //time_t start = time(NULL);
 
     for(int i = 0; i < strlen(inputStr); i++)   
         {   
@@ -226,19 +223,12 @@ void FadeInString(HD44780 *lcd, char *txt)
             else if(i>breakPoint) {Row = 1; lcd->GoTo(i-(breakPoint+1),Row); } 
             lcd->WriteData(inputStr[i]);  printf("%d",i);      // Prints char from CGROM(standard char memory)       
         }
-        
-    // time_t end = time(NULL);     
     
-    // double secCnt = difftime(end, start);  // Total duration of print
-
-    // double maxDur = 20.0;       // 20 sec
-
-    // unsigned long remainingMs = (unsigned long)((maxDur - secCnt) * 1000);
-
-    // for(unsigned int t = 0; t < (remainingMs) * 1000; t++) 
-    // {_delay_ms(1);}
-
-    // lcd->Clear();                                                          
+    unsigned int delay = 56 - (strlen(inputStr));
+    for(unsigned int t = 0; t < delay; t++) 
+    {_delay_ms(355);}               // character render cykle = ~460 ms per iteration
+                                    // 46 - 465
+    lcd->Clear();                                                          
 } 
 
 int CleanBreak(char *inputStr) // Prevents row break mid-word 
@@ -276,8 +266,7 @@ void DiscoMan(HD44780 *lcd)
                     else if(i <  15          && i%2==1) { memcpy(&slicedChar[j], &dManOpen[j], sizeof(uint8_t)); }  
                     else if(i >= 15 && i<=28 && i%2==1) { memcpy(&slicedChar[j], &dManL[j], sizeof(uint8_t)); }    
                     else if(i> 28)                      { memcpy(&slicedChar[j], &dManFin[j], sizeof(uint8_t)); }      
-                    
-                    
+                     
                     lcd->CreateChar(0, slicedChar);   // Assign current iteration content to CGRAM(custom char mem) slot 0 
                     
                     if     (i%2==0) { Rowz = 0; lcd->GoTo(i+1,Rowz); }  // Move position 
@@ -293,3 +282,29 @@ void DiscoMan(HD44780 *lcd)
     lcd->Clear();         
 }
 
+void sweepAnimation(HD44780 &lcd) {
+
+    const char sweepChar = '#';
+    const char blankChar = ' ';
+
+    //sweep forward
+    for(int i = 0; i < 16; i++) {
+        lcd.GoTo(i, 0);
+        lcd.WriteData(sweepChar);
+
+        lcd.GoTo(i, 1);
+        lcd.WriteData(sweepChar);
+
+        _delay_ms(20);
+    }
+    //sweep backward (clear)
+    for(int i = 16; i >= 0; i--) {
+        lcd.GoTo(i, 0);
+        lcd.WriteData(blankChar);
+
+        lcd.GoTo(i, 1);
+        lcd.WriteData(blankChar);
+
+        _delay_ms(20);
+    }
+} 

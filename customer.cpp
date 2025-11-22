@@ -23,7 +23,7 @@ void createCustomers(Customer *user){
     strcpy(user[2].message[1].message, "Bygga svart? Ring Petter");
 
     //Långbens detektivbyrå
-    user[3].paid = 4000;
+    user[3].paid = 4000;     // "Mysterier? Ring Långben"
     user[3].messagesCount = 2;
     strcpy(user[3].message[0].message, "Mysterier? Ring Långben");
     strcpy(user[3].message[1].message, "Långben fixar biffen");

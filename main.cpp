@@ -23,25 +23,26 @@
 #define BUTTON_IS_CLICKED(PINB,BUTTON_PIN) !BIT_CHECK(PINB,BUTTON_PIN)
 #define DISPLEN 16
 
-uint16_t getRandomSeed (){ // uninitialized ADC value for random seed (AVR ADC produces a 10bit result, hence uint16_t (16bit))
+uint16_t getRandomSeed (){ //uninitialized ADC value for random seed (AVR ADC produces a 10bit result, hence uint16_t (16bit))
     
-    // Select AVCC (Analog Voltage Supply for ADC) as reference, ADC0 as input
-    ADMUX = (1 << REFS0);
+    //read ADC0
+    ADMUX = (1 << REFS0);                   //Select AVCC (Analog Voltage Supply for ADC) as reference, ADC0 as input
+    ADCSRA = (1 << ADEN) | (1 << ADSC);     //set ADEN to 1; enables ADC, and start conversion
+    while (ADCSRA & (1 << ADSC));           //Wait for conversion to finish
+    uint16_t seed0 = ADC;                   //read result 
+    
+    //read ADC1
+    ADMUX = (1 << REFS0) | 1;               //same as above but ADC1 (by adding "| 1")
+    ADCSRA = (1 << ADEN) | (1 << ADSC);
+    while (ADCSRA & (1 << ADSC));
+    uint16_t seed1 = ADC;
 
-    // set ADEN to 1; enables ADC, and start conversion
-    ADCSRA = (1 << ADEN) | (1 << ADSC); 
-    
-    
-    // Wait for conversion to finish
-    while (ADCSRA & (1 << ADSC)); 
-    
-    //read result
-    uint16_t randomSeed = ADC; 
-    
     //Disable for good practice, will otherwise still consume power when idle and ensures no accidental ADC reads later.
     ADCSRA = 0;
     ADMUX = 0;
 
+    uint16_t randomSeed = seed0 ^ seed1; //XOR to mix entropy, basically to mix 2 independent ADC readings for bettter RNG
+    
     return randomSeed;
 }
 
@@ -66,7 +67,7 @@ int main(void){
 
     int userToPresent = -1;
     
-    discoMan(&lcd);
+    //discoMan(&lcd);
 
     while(1){
         userToPresent = randomCustomer(user, sum, userToPresent);

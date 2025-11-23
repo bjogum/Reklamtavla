@@ -72,7 +72,7 @@ void createSpecChar(HD44780 *lcd){
     lcd->CreateChar(4, aw); lcd->CreateChar(5, ae); lcd->CreateChar(6, oo);
 }
 
-void FixSpecChar(char *InStr){ // Applies mapping for Å,Ä,Ö,å,ä,ö
+void fixSpecChar(char *InStr){ // Applies mapping for Å,Ä,Ö,å,ä,ö
     
     int j = 0;
     char OutStr[strlen(InStr) + 1];
@@ -94,141 +94,139 @@ void FixSpecChar(char *InStr){ // Applies mapping for Å,Ä,Ö,å,ä,ö
     strcpy(InStr,OutStr);
 }
 
-void GetBitmap(char inputChar, uint8_t slicedChar[8]) 
+const uint8_t* getBitmap(char inputChar) 
 {   // Fetch corresponding bitmap for char A-Ö(or a-ö), and store it as 8-element-array, type alias uint8_t
     
     //A                                                                                         //O                                                                                                                             
-    uint8_t AUp[8] = {0b01110, 0b10001, 0b10001, 0b11111, 0b10001, 0b10001, 0b10001, 0b00000}; uint8_t OUp[8] = {0b01110, 0b10001, 0b10001, 0b10001, 0b10001, 0b10001, 0b01110, 0b00000};
-    uint8_t ALo[8] = {0b00000, 0b01110, 0b00001, 0b01111, 0b10001, 0b10011, 0b01101, 0b00000}; uint8_t OLo[8] = {0b00000, 0b00000, 0b01110, 0b10001, 0b10001, 0b10001, 0b01110, 0b00000};
+    static const uint8_t AUp[8] = {0b01110, 0b10001, 0b10001, 0b11111, 0b10001, 0b10001, 0b10001, 0b00000}; static const uint8_t OUp[8] = {0b01110, 0b10001, 0b10001, 0b10001, 0b10001, 0b10001, 0b01110, 0b00000};
+    static const uint8_t ALo[8] = {0b00000, 0b01110, 0b00001, 0b01111, 0b10001, 0b10011, 0b01101, 0b00000}; static const uint8_t OLo[8] = {0b00000, 0b00000, 0b01110, 0b10001, 0b10001, 0b10001, 0b01110, 0b00000};
     // B                                                                                         //P                                                                                                                               
-    uint8_t BUp[8] = {0b11110, 0b10001, 0b10001, 0b11110, 0b10001, 0b10001, 0b11110, 0b00000}; uint8_t PUp[8] = {0b11110, 0b10001, 0b10001, 0b11110, 0b10000, 0b10000, 0b10000, 0b00000};
-    uint8_t BLo[8] = {0b10000, 0b10000, 0b10110, 0b11001, 0b10001, 0b10001, 0b11110, 0b00000}; uint8_t PLo[8] = {0b00000, 0b00000, 0b11110, 0b10001, 0b10001, 0b11110, 0b10000, 0b10000};
+    static const uint8_t BUp[8] = {0b11110, 0b10001, 0b10001, 0b11110, 0b10001, 0b10001, 0b11110, 0b00000}; static const uint8_t PUp[8] = {0b11110, 0b10001, 0b10001, 0b11110, 0b10000, 0b10000, 0b10000, 0b00000};
+    static const uint8_t BLo[8] = {0b10000, 0b10000, 0b10110, 0b11001, 0b10001, 0b10001, 0b11110, 0b00000}; static const uint8_t PLo[8] = {0b00000, 0b00000, 0b11110, 0b10001, 0b10001, 0b11110, 0b10000, 0b10000};
     // C                                                                                         //Q                                         
-    uint8_t CUp[8] = {0b01110, 0b10001, 0b10000, 0b10000, 0b10000, 0b10001, 0b01110, 0b00000}; uint8_t QUp[8] = {0b01110, 0b10001, 0b10001, 0b10001, 0b10101, 0b10010, 0b01101, 0b00000};
-    uint8_t CLo[8] = {0b00000, 0b01110, 0b10001, 0b10000, 0b10000, 0b10001, 0b01110, 0b00000}; uint8_t QLo[8] = {0b00000, 0b00000, 0b01111, 0b10001, 0b10001, 0b01111, 0b00001, 0b00001};
+    static const uint8_t CUp[8] = {0b01110, 0b10001, 0b10000, 0b10000, 0b10000, 0b10001, 0b01110, 0b00000}; static const uint8_t QUp[8] = {0b01110, 0b10001, 0b10001, 0b10001, 0b10101, 0b10010, 0b01101, 0b00000};
+    static const uint8_t CLo[8] = {0b00000, 0b01110, 0b10001, 0b10000, 0b10000, 0b10001, 0b01110, 0b00000}; static const uint8_t QLo[8] = {0b00000, 0b00000, 0b01111, 0b10001, 0b10001, 0b01111, 0b00001, 0b00001};
     // D                                                                                         //R                                            
-    uint8_t DUp[8] = {0b11110, 0b10001, 0b10001, 0b10001, 0b10001, 0b10001, 0b11110, 0b00000}; uint8_t RUp[8] = {0b11110, 0b10001, 0b10001, 0b11110, 0b10100, 0b10010, 0b10001, 0b00000};
-    uint8_t DLo[8] = {0b00001, 0b00001, 0b01101, 0b10011, 0b10001, 0b10001, 0b01111, 0b00000}; uint8_t RLo[8] = {0b00000, 0b00000, 0b10110, 0b11001, 0b10000, 0b10000, 0b10000, 0b00000};
+    static const uint8_t DUp[8] = {0b11110, 0b10001, 0b10001, 0b10001, 0b10001, 0b10001, 0b11110, 0b00000}; static const uint8_t RUp[8] = {0b11110, 0b10001, 0b10001, 0b11110, 0b10100, 0b10010, 0b10001, 0b00000};
+    static const uint8_t DLo[8] = {0b00001, 0b00001, 0b01101, 0b10011, 0b10001, 0b10001, 0b01111, 0b00000}; static const uint8_t RLo[8] = {0b00000, 0b00000, 0b10110, 0b11001, 0b10000, 0b10000, 0b10000, 0b00000};
     // E                                                                                         //S                         
-    uint8_t EUp[8] = {0b11111, 0b10000, 0b10000, 0b11110, 0b10000, 0b10000, 0b11111, 0b00000}; uint8_t SUp[8] = {0b01111, 0b10000, 0b10000, 0b01110, 0b00001, 0b00001, 0b11110, 0b00000};
-    uint8_t ELo[8] = {0b00000, 0b01110, 0b10001, 0b11111, 0b10000, 0b10001, 0b01110, 0b00000}; uint8_t SLo[8] = {0b00000, 0b00000, 0b01110, 0b10000, 0b01110, 0b00001, 0b11110, 0b00000};
+    static const uint8_t EUp[8] = {0b11111, 0b10000, 0b10000, 0b11110, 0b10000, 0b10000, 0b11111, 0b00000}; static const uint8_t SUp[8] = {0b01111, 0b10000, 0b10000, 0b01110, 0b00001, 0b00001, 0b11110, 0b00000};
+    static const uint8_t ELo[8] = {0b00000, 0b01110, 0b10001, 0b11111, 0b10000, 0b10001, 0b01110, 0b00000}; static const uint8_t SLo[8] = {0b00000, 0b00000, 0b01110, 0b10000, 0b01110, 0b00001, 0b11110, 0b00000};
     // F                                                                                         //T           
-    uint8_t FUp[8] = {0b11111, 0b10000, 0b10000, 0b11110, 0b10000, 0b10000, 0b10000, 0b00000}; uint8_t TUp[8] = {0b11111, 0b00100, 0b00100, 0b00100, 0b00100, 0b00100, 0b00100, 0b00000};
-    uint8_t FLo[8] = {0b00110, 0b01001, 0b01000, 0b11100, 0b01000, 0b01000, 0b01000, 0b00000}; uint8_t TLo[8] = {0b01000, 0b01000, 0b11100, 0b01000, 0b01000, 0b01001, 0b00110, 0b00000};
+    static const uint8_t FUp[8] = {0b11111, 0b10000, 0b10000, 0b11110, 0b10000, 0b10000, 0b10000, 0b00000}; static const uint8_t TUp[8] = {0b11111, 0b00100, 0b00100, 0b00100, 0b00100, 0b00100, 0b00100, 0b00000};
+    static const uint8_t FLo[8] = {0b00110, 0b01001, 0b01000, 0b11100, 0b01000, 0b01000, 0b01000, 0b00000}; static const uint8_t TLo[8] = {0b01000, 0b01000, 0b11100, 0b01000, 0b01000, 0b01001, 0b00110, 0b00000};
     // G                                                                                         //U                               
-    uint8_t GUp[8] = {0b01110, 0b10001, 0b10000, 0b10111, 0b10001, 0b10001, 0b01110, 0b00000}; uint8_t UUp[8] = {0b10001, 0b10001, 0b10001, 0b10001, 0b10001, 0b10001, 0b01110, 0b00000};
-    uint8_t GLo[8] = {0b00000, 0b01111, 0b10001, 0b10001, 0b01111, 0b00001, 0b01110, 0b00000}; uint8_t ULo[8] = {0b00000, 0b00000, 0b10001, 0b10001, 0b10001, 0b10011, 0b01101, 0b00000};
+    static const uint8_t GUp[8] = {0b01110, 0b10001, 0b10000, 0b10111, 0b10001, 0b10001, 0b01110, 0b00000}; static const uint8_t UUp[8] = {0b10001, 0b10001, 0b10001, 0b10001, 0b10001, 0b10001, 0b01110, 0b00000};
+    static const uint8_t GLo[8] = {0b00000, 0b01111, 0b10001, 0b10001, 0b01111, 0b00001, 0b01110, 0b00000}; static const uint8_t ULo[8] = {0b00000, 0b00000, 0b10001, 0b10001, 0b10001, 0b10011, 0b01101, 0b00000};
     // H                                                                                         //V                                 
-    uint8_t HUp[8] = {0b10001, 0b10001, 0b10001, 0b11111, 0b10001, 0b10001, 0b10001, 0b00000}; uint8_t VUp[8] = {0b10001, 0b10001, 0b10001, 0b10001, 0b01010, 0b01010, 0b00100, 0b00000};
-    uint8_t HLo[8] = {0b10000, 0b10000, 0b10110, 0b11001, 0b10001, 0b10001, 0b10001, 0b00000}; uint8_t VLo[8] = {0b00000, 0b00000, 0b10001, 0b10001, 0b01010, 0b01010, 0b00100, 0b00000};
+    static const uint8_t HUp[8] = {0b10001, 0b10001, 0b10001, 0b11111, 0b10001, 0b10001, 0b10001, 0b00000}; static const uint8_t VUp[8] = {0b10001, 0b10001, 0b10001, 0b10001, 0b01010, 0b01010, 0b00100, 0b00000};
+    static const uint8_t HLo[8] = {0b10000, 0b10000, 0b10110, 0b11001, 0b10001, 0b10001, 0b10001, 0b00000}; static const uint8_t VLo[8] = {0b00000, 0b00000, 0b10001, 0b10001, 0b01010, 0b01010, 0b00100, 0b00000};
     // I                                                                                         //W                           
-    uint8_t IUp[8] = {0b01110, 0b00100, 0b00100, 0b00100, 0b00100, 0b00100, 0b01110, 0b00000}; uint8_t WUp[8] = {0b10001, 0b10001, 0b10001, 0b10101, 0b10101, 0b10101, 0b01010, 0b00000};
-    uint8_t ILo[8] = {0b00100, 0b00000, 0b01100, 0b00100, 0b00100, 0b00100, 0b01110, 0b00000}; uint8_t WLo[8] = {0b00000, 0b00000, 0b10001, 0b10001, 0b10101, 0b10101, 0b01010, 0b00000};
+    static const uint8_t IUp[8] = {0b01110, 0b00100, 0b00100, 0b00100, 0b00100, 0b00100, 0b01110, 0b00000}; static const uint8_t WUp[8] = {0b10001, 0b10001, 0b10001, 0b10101, 0b10101, 0b10101, 0b01010, 0b00000};
+    static const uint8_t ILo[8] = {0b00100, 0b00000, 0b01100, 0b00100, 0b00100, 0b00100, 0b01110, 0b00000}; static const uint8_t WLo[8] = {0b00000, 0b00000, 0b10001, 0b10001, 0b10101, 0b10101, 0b01010, 0b00000};
     // J                                                                                         //X                                 
-    uint8_t JUp[8] = {0b00111, 0b00001, 0b00001, 0b00001, 0b10001, 0b10001, 0b01110, 0b00000}; uint8_t XUp[8] = {0b10001, 0b01010, 0b00100, 0b00100, 0b00100, 0b01010, 0b10001, 0b00000};
-    uint8_t JLo[8] = {0b00010, 0b00000, 0b00110, 0b00010, 0b00010, 0b10010, 0b01100, 0b00000}; uint8_t XLo[8] = {0b00000, 0b00000, 0b10001, 0b01010, 0b00100, 0b01010, 0b10001, 0b00000};
+    static const uint8_t JUp[8] = {0b00111, 0b00001, 0b00001, 0b00001, 0b10001, 0b10001, 0b01110, 0b00000}; static const uint8_t XUp[8] = {0b10001, 0b01010, 0b00100, 0b00100, 0b00100, 0b01010, 0b10001, 0b00000};
+    static const uint8_t JLo[8] = {0b00010, 0b00000, 0b00110, 0b00010, 0b00010, 0b10010, 0b01100, 0b00000}; static const uint8_t XLo[8] = {0b00000, 0b00000, 0b10001, 0b01010, 0b00100, 0b01010, 0b10001, 0b00000};
     // K                                                                                         //Y                              
-    uint8_t KUp[8] = {0b10001, 0b10010, 0b10100, 0b11000, 0b10100, 0b10010, 0b10001, 0b00000}; uint8_t YUp[8] = {0b10001, 0b01010, 0b00100, 0b00100, 0b00100, 0b00100, 0b00100, 0b00000};
-    uint8_t KLo[8] = {0b10000, 0b10000, 0b10010, 0b10100, 0b11000, 0b10100, 0b10010, 0b00000}; uint8_t YLo[8] = {0b00000, 0b00000, 0b10001, 0b10001, 0b01111, 0b00001, 0b01110, 0b00000};
+    static const uint8_t KUp[8] = {0b10001, 0b10010, 0b10100, 0b11000, 0b10100, 0b10010, 0b10001, 0b00000}; static const uint8_t YUp[8] = {0b10001, 0b01010, 0b00100, 0b00100, 0b00100, 0b00100, 0b00100, 0b00000};
+    static const uint8_t KLo[8] = {0b10000, 0b10000, 0b10010, 0b10100, 0b11000, 0b10100, 0b10010, 0b00000}; static const uint8_t YLo[8] = {0b00000, 0b00000, 0b10001, 0b10001, 0b01111, 0b00001, 0b01110, 0b00000};
     // L                                                                                         //Z                                    
-    uint8_t LUp[8] = {0b10000, 0b10000, 0b10000, 0b10000, 0b10000, 0b10000, 0b11111, 0b00000}; uint8_t ZUp[8] = {0b11111, 0b00001, 0b00010, 0b00100, 0b01000, 0b10000, 0b11111, 0b00000};
-    uint8_t LLo[8] = {0b01100, 0b00100, 0b00100, 0b00100, 0b00100, 0b00100, 0b01110, 0b00000}; uint8_t ZLo[8] = {0b00000, 0b00000, 0b11111, 0b00010, 0b00100, 0b01000, 0b11111, 0b00000};                                                                                                 
+    static const uint8_t LUp[8] = {0b10000, 0b10000, 0b10000, 0b10000, 0b10000, 0b10000, 0b11111, 0b00000}; static const uint8_t ZUp[8] = {0b11111, 0b00001, 0b00010, 0b00100, 0b01000, 0b10000, 0b11111, 0b00000};
+    static const uint8_t LLo[8] = {0b01100, 0b00100, 0b00100, 0b00100, 0b00100, 0b00100, 0b01110, 0b00000}; static const uint8_t ZLo[8] = {0b00000, 0b00000, 0b11111, 0b00010, 0b00100, 0b01000, 0b11111, 0b00000};                                                                                                 
     // M                                                                                         //Å
-    uint8_t MUp[8] = {0b10001, 0b11011, 0b10101, 0b10101, 0b10001, 0b10001, 0b10001, 0b00000}; uint8_t AW[8] = {0b00100, 0b00000, 0b01110, 0b10001, 0b11111, 0b10001, 0b00000, 0b10001};
-    uint8_t MLo[8] = {0b00000, 0b00000, 0b11010, 0b10101, 0b10101, 0b10101, 0b10101, 0b00000}; uint8_t aw[8] = {0b00100, 0b00000, 0b01110, 0b00001, 0b01111, 0b10001, 0b01111, 0b00000};
+    static const uint8_t MUp[8] = {0b10001, 0b11011, 0b10101, 0b10101, 0b10001, 0b10001, 0b10001, 0b00000}; static const uint8_t AW[8] = {0b00100, 0b00000, 0b01110, 0b10001, 0b11111, 0b10001, 0b00000, 0b10001};
+    static const uint8_t MLo[8] = {0b00000, 0b00000, 0b11010, 0b10101, 0b10101, 0b10101, 0b10101, 0b00000}; static const uint8_t aw[8] = {0b00100, 0b00000, 0b01110, 0b00001, 0b01111, 0b10001, 0b01111, 0b00000};
     // N                                                                                         //Ä  
-    uint8_t NUp[8] = {0b10001, 0b10001, 0b11001, 0b10101, 0b10011, 0b10001, 0b10001, 0b00000}; uint8_t AE[8] = {0b01010, 0b00000, 0b01110, 0b10001, 0b11111, 0b10001, 0b00000, 0b10001};
-    uint8_t NLo[8] = {0b00000, 0b00000, 0b10110, 0b11001, 0b10001, 0b10001, 0b10001, 0b00000}; uint8_t ae[8] = {0b01010, 0b00000, 0b01110, 0b00001, 0b01111, 0b10001, 0b01111, 0b00000};
+    static const uint8_t NUp[8] = {0b10001, 0b10001, 0b11001, 0b10101, 0b10011, 0b10001, 0b10001, 0b00000}; static const uint8_t AE[8] = {0b01010, 0b00000, 0b01110, 0b10001, 0b11111, 0b10001, 0b00000, 0b10001};
+    static const uint8_t NLo[8] = {0b00000, 0b00000, 0b10110, 0b11001, 0b10001, 0b10001, 0b10001, 0b00000}; static const uint8_t ae[8] = {0b01010, 0b00000, 0b01110, 0b00001, 0b01111, 0b10001, 0b01111, 0b00000};
                                                                                                  //Ö
-                                                                                                uint8_t OO[8] = {0b01010, 0b00000, 0b01110, 0b10001, 0b10001, 0b10001, 0b01110, 0b00000};
-    /*SPACE*/                                                                                   uint8_t oo[8] = {0b01010, 0b00000, 0b01110, 0b10001, 0b10001, 0b10001, 0b01110, 0b00000};
-    uint8_t SPACE[8] = {0b00000, 0b00000, 0b00000, 0b00000, 0b00000, 0b00000, 0b00000, 0b00000}; 
+                                                                                                static const uint8_t OO[8] = {0b01010, 0b00000, 0b01110, 0b10001, 0b10001, 0b10001, 0b01110, 0b00000};
+    /*SPACE*/                                                                                   static const uint8_t oo[8] = {0b01010, 0b00000, 0b01110, 0b10001, 0b10001, 0b10001, 0b01110, 0b00000};
+    static const uint8_t SPACE[8] = {0b00000, 0b00000, 0b00000, 0b00000, 0b00000, 0b00000, 0b00000, 0b00000}; 
    
     switch (inputChar)
         {
-        case 'A': memcpy(slicedChar, AUp, sizeof(AUp));break;   
-        case 'a': memcpy(slicedChar, ALo, sizeof(ALo));break;    
-        case 'B': memcpy(slicedChar, BUp, sizeof(BUp));break;   
-        case 'b': memcpy(slicedChar, BLo, sizeof(BLo));break;  
-        case 'C': memcpy(slicedChar, CUp, sizeof(CUp));break;   
-        case 'c': memcpy(slicedChar, CLo, sizeof(CLo));break;  
-        case 'D': memcpy(slicedChar, DUp, sizeof(DUp));break;   
-        case 'd': memcpy(slicedChar, DLo, sizeof(DLo));break;  
-        case 'E': memcpy(slicedChar, EUp, sizeof(EUp));break;   
-        case 'e': memcpy(slicedChar, ELo, sizeof(ELo));break;  
-        case 'F': memcpy(slicedChar, FUp, sizeof(FUp));break;   
-        case 'f': memcpy(slicedChar, FLo, sizeof(FLo));break;  
-        case 'G': memcpy(slicedChar, GUp, sizeof(GUp));break;   
-        case 'g': memcpy(slicedChar, GLo, sizeof(GLo));break;  
-        case 'H': memcpy(slicedChar, HUp, sizeof(HUp));break;   
-        case 'h': memcpy(slicedChar, HLo, sizeof(HLo));break;  
-        case 'I': memcpy(slicedChar, IUp, sizeof(IUp));break;   
-        case 'i': memcpy(slicedChar, ILo, sizeof(ILo));break;    
-        case 'J': memcpy(slicedChar, JUp, sizeof(JUp));break;   
-        case 'j': memcpy(slicedChar, JLo, sizeof(JLo));break;   
-        case 'K': memcpy(slicedChar, KUp, sizeof(KUp));break;   
-        case 'k': memcpy(slicedChar, KLo, sizeof(KLo));break;   
-        case 'L': memcpy(slicedChar, LUp, sizeof(LUp));break;   
-        case 'l': memcpy(slicedChar, LLo, sizeof(LLo));break;   
-        case 'M': memcpy(slicedChar, MUp, sizeof(MUp));break;   
-        case 'm': memcpy(slicedChar, MLo, sizeof(MLo));break;  
-        case 'N': memcpy(slicedChar, NUp, sizeof(NUp));break;
-        case 'n': memcpy(slicedChar, NLo, sizeof(NLo));break;
-        case 'O': memcpy(slicedChar, OUp, sizeof(OUp));break;
-        case 'o': memcpy(slicedChar, OLo, sizeof(OLo));break;
-        case 'P': memcpy(slicedChar, PUp, sizeof(PUp));break;
-        case 'p': memcpy(slicedChar, PLo, sizeof(PLo));break;
-        case 'Q': memcpy(slicedChar, QUp, sizeof(QUp));break;
-        case 'q': memcpy(slicedChar, QLo, sizeof(QLo));break;
-        case 'R': memcpy(slicedChar, RUp, sizeof(RUp));break;
-        case 'r': memcpy(slicedChar, RLo, sizeof(RLo));break;
-        case 'S': memcpy(slicedChar, SUp, sizeof(SUp));break;
-        case 's': memcpy(slicedChar, SLo, sizeof(SLo));break;
-        case 'T': memcpy(slicedChar, TUp, sizeof(TUp));break;
-        case 't': memcpy(slicedChar, TLo, sizeof(TLo));break;
-        case 'U': memcpy(slicedChar, UUp, sizeof(UUp));break;
-        case 'u': memcpy(slicedChar, ULo, sizeof(ULo));break;
-        case 'V': memcpy(slicedChar, VUp, sizeof(VUp));break;
-        case 'v': memcpy(slicedChar, VLo, sizeof(VLo));break;
-        case 'W': memcpy(slicedChar, WUp, sizeof(WUp));break;
-        case 'w': memcpy(slicedChar, WLo, sizeof(WLo));break;
-        case 'X': memcpy(slicedChar, XUp, sizeof(XUp));break;
-        case 'x': memcpy(slicedChar, XLo, sizeof(XLo));break;
-        case 'Y': memcpy(slicedChar, YUp, sizeof(YUp));break;
-        case 'y': memcpy(slicedChar, YLo, sizeof(YLo));break;
-        case 'Z': memcpy(slicedChar, ZUp, sizeof(ZUp));break;
-        case 'z': memcpy(slicedChar, ZLo, sizeof(ZLo));break;  
-        case 1: memcpy(slicedChar, AW, sizeof(AW));break;
-        case 2: memcpy(slicedChar, aw, sizeof(aw));break;
-        case 3: memcpy(slicedChar, AE, sizeof(AE));break;
-        case 4: memcpy(slicedChar, ae, sizeof(ae));break;
-        case 5: memcpy(slicedChar, OO, sizeof(OO));break;
-        case 6: memcpy(slicedChar, oo, sizeof(oo));break;
-        case ' ': memcpy(slicedChar, SPACE, sizeof(SPACE));break;
-        default: memcpy(slicedChar, SPACE, sizeof(SPACE));break;
+        case 'A': return AUp;   
+        case 'a': return ALo;    
+        case 'B': return BUp;   
+        case 'b': return BLo;  
+        case 'C': return CUp;   
+        case 'c': return CLo;  
+        case 'D': return DUp;   
+        case 'd': return DLo;  
+        case 'E': return EUp;   
+        case 'e': return ELo;  
+        case 'F': return FUp;   
+        case 'f': return FLo;  
+        case 'G': return GUp;   
+        case 'g': return GLo;  
+        case 'H': return HUp;   
+        case 'h': return HLo;  
+        case 'I': return IUp;   
+        case 'i': return ILo;    
+        case 'J': return JUp;   
+        case 'j': return JLo;   
+        case 'K': return KUp;   
+        case 'k': return KLo;   
+        case 'L': return LUp;   
+        case 'l': return LLo;   
+        case 'M': return MUp;   
+        case 'm': return MLo;  
+        case 'N': return NUp;
+        case 'n': return NLo;
+        case 'O': return OUp;
+        case 'o': return OLo;
+        case 'P': return PUp;
+        case 'p': return PLo;
+        case 'Q': return QUp;
+        case 'q': return QLo;
+        case 'R': return RUp;
+        case 'r': return RLo;
+        case 'S': return SUp;
+        case 's': return SLo;
+        case 'T': return TUp;
+        case 't': return TLo;
+        case 'U': return UUp;
+        case 'u': return ULo;
+        case 'V': return VUp;
+        case 'v': return VLo;
+        case 'W': return WUp;
+        case 'w': return WLo;
+        case 'X': return XUp;
+        case 'x': return XLo;
+        case 'Y': return YUp;
+        case 'y': return YLo;
+        case 'Z': return ZUp;
+        case 'z': return ZLo;  
+        case 1: return AW;
+        case 2: return aw;
+        case 3: return AE;
+        case 4: return ae;
+        case 5: return OO;
+        case 6: return oo;
+        case ' ': return SPACE;
+        default: return SPACE;
     }        
 }
 
-void FadeInString(HD44780 *lcd, char *txt) 
-{
-    char *inputStr = txt;   
-                       
+void fadeInString(HD44780 *lcd, char *txt) 
+{                  
     lcd->Clear();
     lcd->GoTo(0,0);
 
-    int breakPoint = 0;
-    breakPoint = CleanBreak(inputStr); // Use breakPoint as rowbreak
-    
-    uint8_t slicedChar[8] = { 0 }; 
+    int breakPoint = cleanBreak(txt); // Use breakPoint as rowbreak
 
-    for(int i = 0; i < strlen(inputStr); i++)   
+    int txtLen = strlen(txt);
+
+    for(int i = 0; i < txtLen; i++)   
         {   
             uint8_t tmpBit[8] = { 0 };
-            GetBitmap(inputStr[i],slicedChar);      // Expects string[i], uint8_t[8]
 
-            int Row;            // Position variable Y-axis
+            const uint8_t* slicedChar = getBitmap(txt[i]);      // Expects string[i], uint8_t[8]
 
-            for(int j = 0; j < 4; j++)              
+            int Row;          // Position variable Y-axis
+
+            for(int j = 0; j < 5; j++)              
                 {    
                     tmpBit[j] = slicedChar[j];             // tmpBit recieves 1 pixelrow(per iteration) from slicedChar
                     tmpBit[j+1] = slicedChar[j+1];             // tmpBit recieves 1 pixelrow(per iteration) from slicedChar
@@ -240,27 +238,27 @@ void FadeInString(HD44780 *lcd, char *txt)
 
             if     (i<=breakPoint)  {Row = 0; lcd->GoTo(i,Row); } 
             else if(i>breakPoint) {Row = 1; lcd->GoTo(i-(breakPoint+1),Row); } 
-            lcd->WriteData(inputStr[i]);  printf("%d",i);      // Prints char from CGROM(standard char memory)       
+            lcd->WriteData(txt[i]);      // Prints char from CGROM(standard char memory)       
         }
     
-    unsigned int delay = 56 - (strlen(inputStr));
+    unsigned int delay = 56 - txtLen;
     for(unsigned int t = 0; t < delay; t++) 
-    {_delay_ms(355);}               // character render cykle = ~460 ms per iteration
-                                    // 46 - 465
+    {_delay_ms(301);}               
+                                     
     lcd->Clear();                                                          
 } 
 
-int CleanBreak(char *inputStr) // Prevents row break mid-word 
+int cleanBreak(char *txt) // Prevents row break mid-word 
 {
     int breakPoint;
         for (int k = 15; k > 0; k--)
             {
-                if(inputStr[k] == ' '){breakPoint = k; break;}     
+                if(txt[k] == ' '){breakPoint = k; break;}     
             }      
     return breakPoint; // Counts down from end of row 1 until 'space' is found and returns value 
 }
 
-void DiscoMan(HD44780 *lcd)
+void discoMan(HD44780 *lcd)
 {                                                                                         // Bitmaps:
     uint8_t dManR[8] =  { 0b00110,0b00110,0b01001,0b01011,0b00110,0b00110,0b00101,0b01101 };    // Discoman right position(startposition)   
     uint8_t dManL[8] =  { 0b01100,0b01100,0b10010,0b10110,0b01100,0b01100,0b01010,0b11011 };    // Discoman left position     
@@ -268,18 +266,18 @@ void DiscoMan(HD44780 *lcd)
     uint8_t dManFin[8] =  { 0b00000,0b00000,0b00000,0b00000,0b00000,0b00000,0b00000,0b00000 };  // Discoman finale 
     uint8_t slicedChar[8] = { 0b00000,0b00000,0b00000,0b00000,0b00000,0b00000,0b00000,0b00000 }; // Blank bitmap for storing current j feed of pixelrows
                                                                    
+    lcd->Clear(); 
                                                     
     char strSpace[] = "                                "; // Array of 32 spaces for iterating and printing spaces 
-    lcd->Clear(); 
-                               
+
     for(int i = 0; i < strlen(strSpace); i++)
-        { printf("i count: %d \n",i);
+        { //printf("i count: %d \n",i);
                            
           int Rowz;  // Variable for controlling displayposition Y    
                                  
             for(int j = 0; j < 8; j++)
                 {  
-                            printf("j: %d ",j); // Errorhandler 
+                            //printf("j: %d ",j); // Errorhandler 
                                                             // slicedChar gets 1 pixel row from desired bitmap per iteration         
                     if                (i<=28 && i%2==0) { memcpy(&slicedChar[j], &dManR[j], sizeof(uint8_t)); }     
                     else if(i <  15          && i%2==1) { memcpy(&slicedChar[j], &dManOpen[j], sizeof(uint8_t)); }  

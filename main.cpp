@@ -10,7 +10,7 @@
 #include "uart.h"
 #include "customer.h"
 #include "texteffects.h"
-
+ 
 // https://wokwi.com/projects/416241646559459329
 
 #define LED_PIN 2
@@ -23,14 +23,40 @@
 #define BUTTON_IS_CLICKED(PINB,BUTTON_PIN) !BIT_CHECK(PINB,BUTTON_PIN)
 #define DISPLEN 16
 
+uint16_t getRandomSeed (){ // uninitialized ADC value for random seed (AVR ADC produces a 10bit result, hence uint16_t (16bit))
+    
+    // Select AVCC (Analog Voltage Supply for ADC) as reference, ADC0 as input
+    ADMUX = (1 << REFS0);
+
+    // set ADEN to 1; enables ADC, and start conversion
+    ADCSRA = (1 << ADEN) | (1 << ADSC); 
+    
+    
+    // Wait for conversion to finish
+    while (ADCSRA & (1 << ADSC)); 
+    
+    //read result
+    uint16_t randomSeed = ADC; 
+    
+    //Disable for good practice, will otherwise still consume power when idle and ensures no accidental ADC reads later.
+    ADCSRA = 0;
+    ADMUX = 0;
+
+    return randomSeed;
+}
+
+
 int main(void){
 
     init_serial();
     HD44780 lcd;
     lcd.Initialize(); // Initialize the LCD
-    srand(time(NULL)); // Seed rand with sys clock to avoid same rand seq 
-    createSpecChar(&lcd);
     
+    srand(getRandomSeed()); // Seed rand with ADC value
+    printf("seed: %d\n", getRandomSeed());
+
+    createSpecChar(&lcd);
+     
     // create all (5) customers.
     Customer user[5];
     createCustomers(user);

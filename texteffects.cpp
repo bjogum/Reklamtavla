@@ -368,3 +368,22 @@ void typeAnimation(HD44780 &lcd, char* txt) {
         _delay_ms(2000);
     }
 }
+
+// create a "split" presentation (for static text, <32 chars)
+void splitTxt(HD44780 &lcd, char *txt){
+
+    for (int i = 0; i<4; i++){
+        // find the last space
+        char *lastSpace = strrchr(txt, ' ');
+        char firstPrint[33];
+
+        lcd.GoTo(0, 0);
+        snprintf(firstPrint, lastSpace-txt +1 , txt);
+        lcd.WriteText((char *) firstPrint );
+        _delay_ms(3000);
+        lcd.Clear();
+
+        lcd.WriteText((char *) lastSpace + 1);
+        _delay_ms(2000);
+    }
+}

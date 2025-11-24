@@ -15,5 +15,6 @@ int cleanBreak(char *inputStr);
 void typeAnimation(HD44780 &lcd, char* txt);
 void sweepAnimation(HD44780 &lcd);
 const uint8_t* getBitmap(char inputChar);  
+void splitTxt(HD44780 &lcd, char *txt);
 
 #endif

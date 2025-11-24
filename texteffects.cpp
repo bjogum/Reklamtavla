@@ -301,7 +301,6 @@ void discoMan(HD44780 *lcd)
 
 //Animation to "transition" into new text (it sucks and does not work)
 void sweepAnimation(HD44780 &lcd) {
-
     const char sweepChar = '#';
     const char blankChar = ' ';
 
@@ -344,31 +343,24 @@ void randomDelay() {
 void typeAnimation(HD44780 &lcd, char* txt) {
     
     for (int repeat = 0; repeat < 2; repeat++){
-
         lcd.Clear();
         lcd.GoTo(0, 0);
         
-
         const char* c = txt;
         int col = 0;
         int row = 0;
 
         while (*c) {
-
             lcd.WriteData(*c);
             randomDelay();
-
             if (*c == ',' || *c == '.' || *c == '!' || *c == '?') {
                 _delay_ms(500); // Longer delay at punctuations
             }
-
             col++;
             c++;
-
             if (col >= 16) {
                 col = 0;
                 row++;
-
                 if (row >= 2) break;
                 lcd.GoTo(0, row);
             }

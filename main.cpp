@@ -92,7 +92,7 @@ int main(void){
             else if (userToPresent == 3){
                 fadeInString(&lcd, txt);
             }
-            else if (userToPresent == 2 && textIndex == 1){
+            else if ((userToPresent == 2 && textIndex == 1) || (userToPresent == 4 && textIndex == 0)){
                 typeAnimation(lcd, txt);
             }
             else{

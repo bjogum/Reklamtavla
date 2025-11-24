@@ -95,6 +95,9 @@ int main(void){
             else if ((userToPresent == 2 && textIndex == 1) || (userToPresent == 4 && textIndex == 0)){
                 typeAnimation(lcd, txt);
             }
+            else if (strlen(txt) > 32){
+                splitTxt(lcd, txt);
+            }
             else{
                 lcd.GoTo(0,0);
                 lcd.WriteText(txt);

@@ -10,7 +10,7 @@
 #include "uart.h"
 #include "customer.h"
 #include "texteffects.h"
-
+ 
 // https://wokwi.com/projects/416241646559459329
 
 #define LED_PIN 2
@@ -23,14 +23,41 @@
 #define BUTTON_IS_CLICKED(PINB,BUTTON_PIN) !BIT_CHECK(PINB,BUTTON_PIN)
 #define DISPLEN 16
 
+uint16_t getRandomSeed (){ //uninitialized ADC value for random seed (AVR ADC produces a 10bit result, hence uint16_t (16bit))
+    
+    //read ADC0
+    ADMUX = (1 << REFS0);                   //Select AVCC (Analog Voltage Supply for ADC) as reference, ADC0 as input
+    ADCSRA = (1 << ADEN) | (1 << ADSC);     //set ADEN to 1; enables ADC, and start conversion
+    while (ADCSRA & (1 << ADSC));           //Wait for conversion to finish
+    uint16_t seed0 = ADC;                   //read result 
+    
+    //read ADC1
+    ADMUX = (1 << REFS0) | 1;               //same as above but ADC1 (by adding "| 1")
+    ADCSRA = (1 << ADEN) | (1 << ADSC);
+    while (ADCSRA & (1 << ADSC));
+    uint16_t seed1 = ADC;
+
+    //Disable for good practice, will otherwise still consume power when idle and ensures no accidental ADC reads later.
+    ADCSRA = 0;
+    ADMUX = 0;
+
+    uint16_t randomSeed = seed0 ^ seed1; //XOR to mix entropy, basically to mix 2 independent ADC readings for bettter RNG
+    
+    return randomSeed;
+}
+
+
 int main(void){
 
     init_serial();
     HD44780 lcd;
     lcd.Initialize(); // Initialize the LCD
-    srand(time(NULL)); // Seed rand with sys clock to avoid same rand seq 
-    createSpecChar(&lcd);
     
+    srand(getRandomSeed()); // Seed rand with ADC value
+    printf("seed: %d\n", getRandomSeed());
+
+    createSpecChar(&lcd);
+     
     // create all (5) customers.
     Customer user[5];
     createCustomers(user);
@@ -40,7 +67,7 @@ int main(void){
 
     int userToPresent = -1;
     
-    discoMan(&lcd);
+    //discoMan(&lcd);
 
     while(1){
         userToPresent = randomCustomer(user, sum, userToPresent);
@@ -65,7 +92,7 @@ int main(void){
             else if (userToPresent == 3){
                 fadeInString(&lcd, txt);
             }
-            else if (userToPresent == 2 && textIndex == 1){
+            else if ((userToPresent == 2 && textIndex == 1) || (userToPresent == 4 && textIndex == 0)){
                 typeAnimation(lcd, txt);
             }
             else{

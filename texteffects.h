@@ -14,6 +14,6 @@ void discoMan(HD44780 *lcd);
 int cleanBreak(char *inputStr);
 void typeAnimation(HD44780 &lcd, char* txt);
 void sweepAnimation(HD44780 &lcd);
-const uint8_t* getBitmap(char inputChar); 
+const uint8_t* getBitmap(char inputChar);  
 
 #endif

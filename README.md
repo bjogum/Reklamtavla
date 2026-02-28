@@ -1,6 +1,6 @@
 ## Digital advetising billboard (reklamtavla)
 
-This is a digital signage system built with an AVR-based Arduino Uno. It features dynamic text animations to grab attention, just like a real-world electronic billboard. This project was exclusively developed and tested using the [Wokwi](https://wokwi.com) simulation platform.
+This is a digital signage system built with an AVR-based Arduino Uno. It features dynamic text animations, just like a real-world electronic billboard. This project was exclusively developed and tested using the [Wokwi](https://wokwi.com) simulation platform.
 
 #### *Visual Effects*
 * **Horizontal Scroll:** Messages move smoothly across the screen.
